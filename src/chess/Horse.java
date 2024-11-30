@@ -1,42 +1,28 @@
 package chess;
 
+/**
+ * Класс Horse представляет шахматную фигуру коня.
+ */
 public class Horse extends ChessPiece {
-
     public Horse(String color) {
         super(color);
-    }
-
-    @Override
-    public String getColor() {
-        return this.color;
     }
 
     @Override
     public String getSymbol() {
         return "H";
     }
+
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (!isValidMove(chessBoard, line, column, toLine, toColumn)) {
             return false;
         }
 
-        int[][] moves = {
-                {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
-                {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
-        };
+        int deltaX = Math.abs(toLine - line);
+        int deltaY = Math.abs(toColumn - column);
 
-        for (int[] move : moves) {
-            int newLine = line + move[0];
-            int newColumn = column + move[1];
-            if (newLine == toLine && newColumn == toColumn) {
-                ChessPiece targetPiece = chessBoard.board[toLine][toColumn];
-                return targetPiece == null || !targetPiece.getColor().equals(this.color);
-            }
-        }
-
-        return false;
+        // Конь движется буквой "Г" (2 клетки в одном направлении и 1 в другом)
+        return (deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2);
     }
-
-
 }

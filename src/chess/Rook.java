@@ -1,54 +1,38 @@
 package chess;
 
+/**
+ * Класс Rook представляет шахматную фигуру ладью.
+ */
 public class Rook extends ChessPiece {
-
-    // Конструктор, принимающий цвет фигуры
     public Rook(String color) {
         super(color);
     }
 
-    // Метод возвращает цвет фигуры
-    @Override
-    public String getColor() {
-        return this.color;
-    }
-
-    // Метод возвращает символ фигуры
     @Override
     public String getSymbol() {
         return "R";
     }
-    // Реализация метода canMoveToPosition
+
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (!isValidMove(chessBoard, line, column, toLine, toColumn)) {
             return false;
         }
 
-        if (line != toLine && column != toColumn) {
-            return false;
-        }
+        if (line == toLine || column == toColumn) {
+            int stepX = Integer.signum(toLine - line);
+            int stepY = Integer.signum(toColumn - column);
 
-        // Проверяем свободность пути
-        if (line == toLine) { // Горизонтальное движение
-            int step = (toColumn > column) ? 1 : -1;
-            for (int currentColumn = column + step; currentColumn != toColumn; currentColumn += step) {
-                if (chessBoard.board[line][currentColumn] != null) {
-                    return false;
+            int currentX = line + stepX, currentY = column + stepY;
+            while (currentX != toLine || currentY != toColumn) {
+                if (chessBoard.board[currentX][currentY] != null) {
+                    return false; // Путь заблокирован
                 }
+                currentX += stepX;
+                currentY += stepY;
             }
-        } else { // Вертикальное движение
-            int step = (toLine > line) ? 1 : -1;
-            for (int currentLine = line + step; currentLine != toLine; currentLine += step) {
-                if (chessBoard.board[currentLine][column] != null) {
-                    return false;
-                }
-            }
+            return true;
         }
-
-        // Проверяем, что в конечной позиции нет фигуры того же цвета
-        ChessPiece targetPiece = chessBoard.board[toLine][toColumn];
-        return targetPiece == null || !targetPiece.getColor().equals(this.color);
+        return false;
     }
-
 }

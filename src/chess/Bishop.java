@@ -1,54 +1,42 @@
 package chess;
 
+/**
+ * Класс Bishop представляет шахматную фигуру слона.
+ */
 public class Bishop extends ChessPiece {
-
-    // Конструктор, принимающий цвет фигуры
     public Bishop(String color) {
         super(color);
     }
 
-    // Метод возвращает цвет фигуры
-    @Override
-    public String getColor() {
-        return this.color;
-    }
-
-    // Метод возвращает символ фигуры
     @Override
     public String getSymbol() {
         return "B";
     }
 
-    // Реализация метода canMoveToPosition
+
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (!isValidMove(chessBoard, line, column, toLine, toColumn)) {
             return false;
         }
 
-        if (Math.abs(line - toLine) != Math.abs(column - toColumn)) {
-            return false;
-        }
+        int deltaX = Math.abs(toLine - line);
+        int deltaY = Math.abs(toColumn - column);
 
-        // Проверяем свободность пути
-        int lineStep = (toLine > line) ? 1 : -1;
-        int columnStep = (toColumn > column) ? 1 : -1;
-        int currentLine = line + lineStep;
-        int currentColumn = column + columnStep;
+        if (deltaX == deltaY) { // Проверка диагонального движения
+            int stepX = Integer.signum(toLine - line);
+            int stepY = Integer.signum(toColumn - column);
 
-        while (currentLine != toLine && currentColumn != toColumn) {
-            if (chessBoard.board[currentLine][currentColumn] != null) {
-                return false;
+            int currentX = line + stepX, currentY = column + stepY;
+            while (currentX != toLine || currentY != toColumn) {
+                if (chessBoard.board[currentX][currentY] != null) {
+                    return false; // Путь заблокирован
+                }
+                currentX += stepX;
+                currentY += stepY;
             }
-            currentLine += lineStep;
-            currentColumn += columnStep;
+            return true;
         }
-
-        // Проверяем, что в конечной позиции нет фигуры того же цвета
-        ChessPiece targetPiece = chessBoard.board[toLine][toColumn];
-        return targetPiece == null || !targetPiece.getColor().equals(this.color);
+        return false;
     }
-
-
 }
-

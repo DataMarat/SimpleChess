@@ -1,14 +1,11 @@
 package chess;
 
+/**
+ * Класс Pawn представляет шахматную фигуру пешку.
+ */
 public class Pawn extends ChessPiece {
-
     public Pawn(String color) {
         super(color);
-    }
-
-    @Override
-    public String getColor() {
-        return this.color;
     }
 
     @Override
@@ -43,5 +40,4 @@ public class Pawn extends ChessPiece {
 
         return false;
     }
-
 }

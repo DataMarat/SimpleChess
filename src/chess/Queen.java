@@ -1,37 +1,41 @@
 package chess;
 
+/**
+ * Класс Queen представляет шахматную фигуру ферзя.
+ */
 public class Queen extends ChessPiece {
-
-    // Конструктор
     public Queen(String color) {
         super(color);
     }
 
-    // Метод возвращает цвет фигуры
-    @Override
-    public String getColor() {
-        return this.color;
-    }
-
-    // Метод возвращает символ фигуры
     @Override
     public String getSymbol() {
         return "Q";
     }
-    // Реализация метода canMoveToPosition
+
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (!isValidMove(chessBoard, line, column, toLine, toColumn)) {
             return false;
         }
 
-        Rook rook = new Rook(this.color);
-        Bishop bishop = new Bishop(this.color);
+        int deltaX = Math.abs(toLine - line);
+        int deltaY = Math.abs(toColumn - column);
 
-        // Проверяем, если движение ферзя совпадает с движением ладьи или слона
-        return rook.canMoveToPosition(chessBoard, line, column, toLine, toColumn)
-                || bishop.canMoveToPosition(chessBoard, line, column, toLine, toColumn);
+        if (deltaX == deltaY || deltaX == 0 || deltaY == 0) {
+            int stepX = Integer.signum(toLine - line);
+            int stepY = Integer.signum(toColumn - column);
+
+            int currentX = line + stepX, currentY = column + stepY;
+            while (currentX != toLine || currentY != toColumn) {
+                if (chessBoard.board[currentX][currentY] != null) {
+                    return false; // Путь заблокирован
+                }
+                currentX += stepX;
+                currentY += stepY;
+            }
+            return true;
+        }
+        return false;
     }
-
-
 }
